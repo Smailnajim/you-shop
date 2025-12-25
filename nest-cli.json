@@ -36,15 +36,6 @@
       "compilerOptions": {
         "tsConfigPath": "apps/gateway/tsconfig.app.json"
       }
-    },
-    "you-shop": {
-      "type": "application",
-      "root": "apps/you-shop",
-      "entryFile": "main",
-      "sourceRoot": "apps/you-shop/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/you-shop/tsconfig.app.json"
-      }
     }
   }
 }
