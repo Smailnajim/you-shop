@@ -1,4 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
 
 @Injectable()
-export class CatalogueService {}
+export class CatalogueService {
+  constructor(
+    @Inject('CATALOGUE_CLIENT') private catalogueClient: ClientProxy,
+  ) {}
+}
