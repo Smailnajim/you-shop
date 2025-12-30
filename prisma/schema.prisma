@@ -14,19 +14,17 @@ datasource db {
 }
 
 
+model Role {
+  id         Int       @id @default(autoincrement())
+  name       String    @unique
+  permitions String[]
+  users User[]
+}
 
 model User {
   id    Int     @id @default(autoincrement())
+  role  Role    @relation(fields: [roleId], references: [id])
+  roleId Int
   email String  @unique
   name  String?
-  posts Post[]
-}
-
-model Post {
-  id        Int      @id @default(autoincrement())
-  title     String
-  content   String?
-  published Boolean? @default(false)
-  author    User?    @relation(fields: [authorId], references: [id])
-  authorId  Int?
 }
