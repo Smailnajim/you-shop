@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { registerDTO } from './dto/register.dto';
+import { RegisterDto } from './dto/register.dto';
 import { AuthRepository } from './authentification.repository';
+import { LoginDto } from './dto/login.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthentificationService {
@@ -9,8 +11,27 @@ export class AuthentificationService {
     return 'Hello World!';
   }
 
-  register(registerData: registerDTO) {
+  async register(registerData: RegisterDto): Promise<User | null> {
     console.log(registerData);
+    //check if email already exists
+    const user = await this.authRepository.findUserByEmail(registerData.email);
+    if (user) throw new Error('User already exists');
+    //find or create default role
+    const role = await this.authRepository.findOrCreateDefaultRole();
+    //hash password
+    const hashedPassword = await bcrypt.hash(registerData.password, 10);
+    //create user
+    return await this.authRepository.createUser({
+      ...registerData,
+      password: hashedPassword,
+    });
+  }
 
+  async login(loginData: LoginDto) {
+    console.log(loginData);
+    const user = await this.authRepository.findUserByEmail(loginData.email);
+    if (!user) throw new Error('User not found');
+    if (user.password !== loginData.password) throw new Error('Invalid password');
+    return user;
   }
 }
