@@ -1,5 +1,5 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client-auth';
+import { PrismaClient } from '@prisma/client-catalogue';
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit {
@@ -7,7 +7,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
         super({
             datasources: {
                 db: {
-                    url: process.env.AUTH_DATABASE_URL,
+                    url: process.env.CATALOGUE_DATABASE_URL,
                 },
             },
         });
