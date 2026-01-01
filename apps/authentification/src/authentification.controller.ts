@@ -6,7 +6,7 @@ import { LoginDto } from './dto/login.dto';
 @Controller()
 export class AuthentificationController {
   constructor(
-    private readonly authentificationService: AuthentificationService
+    private readonly authentificationService: AuthentificationService,
   ) {}
 
   @MessagePattern('login')
