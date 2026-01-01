@@ -20,7 +20,7 @@ const config: runtime.GetPrismaClientConfig = {
   "clientVersion": "7.2.0",
   "engineVersion": "0c8ef2ce45c83248ab3df073180d5eda9e8be7a3",
   "activeProvider": "postgresql",
-  "inlineSchema": "// This is your Prisma schema file for the authentification service\n\ngenerator client {\n  provider = \"prisma-client\"\n  output   = \"../src/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel Role {\n  id         Int      @id @default(autoincrement())\n  name       String   @unique\n  permitions String[]\n  users      User[]\n}\n\nmodel User {\n  id            Int      @id @default(autoincrement())\n  role          Role     @relation(fields: [roleId], references: [id])\n  roleId        Int\n  firstName     String?\n  lastName      String?\n  email         String   @unique\n  password      String\n  refreshTokens String[]\n}\n",
+  "inlineSchema": "// This is your Prisma schema file for the authentification service\n\ngenerator client {\n  provider = \"prisma-client\"\n  output   = \"../client-auth\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel Role {\n  id         Int      @id @default(autoincrement())\n  name       String   @unique\n  permitions String[]\n  users      User[]\n}\n\nmodel User {\n  id            Int      @id @default(autoincrement())\n  role          Role     @relation(fields: [roleId], references: [id])\n  roleId        Int\n  firstName     String?\n  lastName      String?\n  email         String   @unique\n  password      String\n  refreshTokens String[]\n}\n",
   "runtimeDataModel": {
     "models": {},
     "enums": {},
