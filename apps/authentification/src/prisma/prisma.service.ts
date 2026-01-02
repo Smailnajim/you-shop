@@ -10,7 +10,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
           url: process.env.AUTH_DATABASE_URL,
         },
       },
-    });
+    } as any);
   }
 
   async onModuleInit() {
