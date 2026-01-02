@@ -3,6 +3,7 @@ import { PrismaService } from './prisma/prisma.service';
 import { User } from './generated/prisma/client';
 import { RegisterDto } from './dto/register.dto';
 import { Roles } from './enum/roles';
+import { UserCreateInput } from './generated/prisma/models';
 
 @Injectable()
 export class AuthRepository {
@@ -17,7 +18,7 @@ export class AuthRepository {
     return user;
   }
 
-  async createUser(userData: RegisterDto): Promise<User> {
+  async createUser(userData: UserCreateInput): Promise<User> {
     return await this.prisma.user.create({
       data: userData,
     });

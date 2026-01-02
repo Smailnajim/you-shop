@@ -6,7 +6,7 @@ import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthentificationService {
-  constructor(private readonly authRepository: AuthRepository) {}
+  constructor(private readonly authRepository: AuthRepository) { }
   getHello(): string {
     return 'Hello World!';
   }
@@ -24,6 +24,9 @@ export class AuthentificationService {
     return await this.authRepository.createUser({
       ...registerData,
       password: hashedPassword,
+      role: {
+        connect: { id: role.id },
+      },
     });
   }
 
