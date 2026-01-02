@@ -1,10 +1,10 @@
 -- CreateTable
-CREATE TABLE "Role" (
+CREATE TABLE "Ro" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
     "permitions" TEXT[],
 
-    CONSTRAINT "Role_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Ro_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -18,10 +18,10 @@ CREATE TABLE "User" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Role_name_key" ON "Role"("name");
+CREATE UNIQUE INDEX "Ro_name_key" ON "Ro"("name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- AddForeignKey
-ALTER TABLE "User" ADD CONSTRAINT "User_roleId_fkey" FOREIGN KEY ("roleId") REFERENCES "Role"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "User" ADD CONSTRAINT "User_roleId_fkey" FOREIGN KEY ("roleId") REFERENCES "Ro"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

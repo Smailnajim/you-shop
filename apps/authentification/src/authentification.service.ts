@@ -11,7 +11,7 @@ export class AuthentificationService {
     return 'Hello World!';
   }
 
-  async register(registerData: RegisterDto): Promise<User | null> {
+  async register(registerData: RegisterDto) {
     console.log(registerData);
     //check if email already exists
     const user = await this.authRepository.findUserByEmail(registerData.email);

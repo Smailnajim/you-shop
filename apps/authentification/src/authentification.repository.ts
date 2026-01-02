@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from './prisma/prisma.service';
-import { User } from './client-auth/browser';
+import { User } from './generated/prisma/client';
 import { RegisterDto } from './dto/register.dto';
 import { Roles } from './enum/roles';
 
@@ -23,13 +23,13 @@ export class AuthRepository {
     });
   }
 
-  async findOrCreateDefaultRole(): Promise<Role> {
+  async findOrCreateDefaultRole() {
     const existingRole = await this.prisma.role.findUnique({
-      where: { name: Roles.defaultRole ?? "client" },
+      where: { name: Roles.defaultRole ?? 'client' },
     });
     if (existingRole) return existingRole;
     return await this.prisma.role.create({
-      data: { name: Roles.defaultRole ?? "client" },
+      data: { name: Roles.defaultRole ?? 'client' },
     });
   }
 }
