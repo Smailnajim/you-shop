@@ -13,16 +13,16 @@ datasource db {
   provider = "postgresql"
 }
 
-model Role {
+model Roles {
   id         Int       @id @default(autoincrement())
   name       String    @unique
   permitions String[]
-  users User[]
+  users Users[]
 }
 
-model User {
+model Users {
   id    Int     @id @default(autoincrement())
-  role  Role    @relation(fields: [roleId], references: [id])
+  role  Roles    @relation(fields: [roleId], references: [id])
   roleId Int
   firstName String
   lastName String

@@ -1,33 +1,36 @@
 import { Injectable } from '@nestjs/common';
 import { Roles } from './enum/roles';
-import { Prisma, User } from './generated/prisma/client';
+import { Prisma, Users } from './generated/prisma/client';
 import { PrismaService } from './prisma/prisma.service';
 
 @Injectable()
 export class AuthRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findUserByEmail(email: string): Promise<User | null> {
-    const user = await this.prisma.user.findUnique({
+  async findUserByEmail(email: string): Promise<Users | null> {
+    console.log('eemail', email);
+    const user = await this.prisma.users.findUnique({
       where: { email },
     });
 
+    console.log('user', user);
     if (!user) return null;
     return user;
   }
 
-  async createUser(userData: Prisma.UserCreateInput): Promise<User> {
-    return await this.prisma.user.create({
+  async createUser(userData: Prisma.UsersCreateInput): Promise<Users> {
+    return await this.prisma.users.create({
       data: userData,
     });
   }
 
   async findOrCreateDefaultRole() {
-    const existingRole = await this.prisma.role.findUnique({
+    console.log('findOrCreateDefaultRole\n');
+    const existingRole = await this.prisma.roles.findUnique({
       where: { name: Roles.defaultRole ?? 'client' },
     });
     if (existingRole) return existingRole;
-    return await this.prisma.role.create({
+    return await this.prisma.roles.create({
       data: { name: Roles.defaultRole ?? 'client' },
     });
   }
