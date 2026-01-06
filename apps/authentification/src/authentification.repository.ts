@@ -7,14 +7,14 @@ import { PrismaService } from './prisma/prisma.service';
 export class AuthRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findUserByEmail(email: string): Promise<Users | null> {
+  async findUserByEmail(email: string): Promise<Users | false> {
     console.log('eemail', email);
     const user = await this.prisma.users.findUnique({
       where: { email },
     });
 
     console.log('user', user);
-    if (!user) return null;
+    if (!user) return false;
     return user;
   }
 

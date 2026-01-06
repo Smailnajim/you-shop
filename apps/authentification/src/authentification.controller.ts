@@ -18,8 +18,14 @@ export class AuthentificationController {
 
   @MessagePattern('register')
   async register(@Payload() registerDto: RegisterDto) {
-    console.log('choooooooooof', registerDto);
-    const user = await this.authentificationService.register(registerDto);
-    return user;
+    try {
+      console.log('choooooooooof', registerDto);
+      const user = await this.authentificationService.register(registerDto);
+      console.log('ffffff');
+      return user;
+    } catch (error) {
+      console.log(error.message);
+      return { message: error.message };
+    }
   }
 }
