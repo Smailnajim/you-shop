@@ -5,16 +5,17 @@ import { PrismaService } from './prisma/prisma.service';
 
 @Injectable()
 export class AuthRepository {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
-  async findUserByEmail(email: string): Promise<Users | false> {
+  async findUserByEmail(email: string) {
     console.log('eemail', email);
     const user = await this.prisma.users.findUnique({
       where: { email },
+      include: { role: true },
     });
 
     console.log('user', user);
-    if (!user) return false;
+    if (!user) return null;
     return user;
   }
 
@@ -27,11 +28,11 @@ export class AuthRepository {
   async findOrCreateDefaultRole() {
     console.log('findOrCreateDefaultRole\n');
     const existingRole = await this.prisma.roles.findUnique({
-      where: { name:  'client' },
+      where: { name: 'client' },
     });
     if (existingRole) return existingRole;
     return await this.prisma.roles.create({
-      data: { name:  'client' },
+      data: { name: 'client' },
     });
   }
 }

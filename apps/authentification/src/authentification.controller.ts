@@ -12,7 +12,7 @@ export class AuthentificationController {
 
   @MessagePattern('login')
   async login(@Payload() loginDto: LoginDto) {
-    return this.authentificationService.login(loginDto);
+    return await this.authentificationService.login(loginDto);
   }
 
   @MessagePattern('register')

@@ -3,11 +3,17 @@ import { RpcException } from '@nestjs/microservices';
 import { RegisterDto } from './dto/register.dto';
 import { AuthRepository } from './authentification.repository';
 import { LoginDto } from './dto/login.dto';
+import { TokenService } from './services';
 import * as bcrypt from 'bcrypt';
+import { LoginResponse } from './interfaces/LoginResponse';
 
 @Injectable()
 export class AuthentificationService {
-  constructor(private readonly authRepository: AuthRepository) {}
+  constructor(
+    private readonly authRepository: AuthRepository,
+    private readonly tokenService: TokenService,
+  ) {}
+
   getHello(): string {
     return 'Hello World!';
   }
@@ -19,7 +25,7 @@ export class AuthentificationService {
     if (user) {
       throw new RpcException({
         message: 'User already exists',
-        statusCode: HttpStatus.NOT_FOUND,
+        statusCode: HttpStatus.CONFLICT,
       });
     }
     //find or create default role
@@ -35,21 +41,38 @@ export class AuthentificationService {
     const hashedPassword = await bcrypt.hash(registerData.password, 10);
     console.log('-------------**\n');
     //create user
-    return await this.authRepository.createUser({
+    const newUser = await this.authRepository.createUser({
       ...registerData,
       password: hashedPassword,
       role: {
         connect: { id: role.id },
       },
     });
+
+    // Generate tokens for new user
+    const tokens = await this.tokenService.generateTokens({
+      id: newUser.id,
+      email: newUser.email,
+      role: { name: role.name },
+    });
+
+    return {
+      user: {
+        id: newUser.id,
+        email: newUser.email,
+        firstName: newUser.firstName,
+        lastName: newUser.lastName,
+      },
+      ...tokens,
+    };
   }
 
-  async login(loginData: LoginDto) {
+  async login(loginData: LoginDto): Promise<LoginResponse> {
     console.log(loginData);
     const user = await this.authRepository.findUserByEmail(loginData.email);
     if (!user) {
       throw new RpcException({
-        message: 'User not found',
+        message: 'Email not exist or password is not correct',
         statusCode: HttpStatus.NOT_FOUND,
       });
     }
@@ -63,6 +86,25 @@ export class AuthentificationService {
         statusCode: HttpStatus.UNAUTHORIZED,
       });
     }
-    return user;
+
+    // Generate tokens
+    const tokens = await this.tokenService.generateTokens({
+      id: user.id,
+      email: user.email,
+      role: user.role,
+    });
+
+    console.log(user.role.name);
+    // Return user data without password + tokens
+    return {
+      user: {
+        id: user.id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        role: user.role.name,
+      },
+      ...tokens,
+    };
   }
 }
