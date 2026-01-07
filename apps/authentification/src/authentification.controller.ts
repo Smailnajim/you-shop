@@ -1,6 +1,6 @@
 import { Controller } from '@nestjs/common';
 import { AuthentificationService } from './authentification.service';
-import { MessagePattern, Payload } from '@nestjs/microservices';
+import { MessagePattern, Payload, RpcException } from '@nestjs/microservices';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 
@@ -11,21 +11,12 @@ export class AuthentificationController {
   ) {}
 
   @MessagePattern('login')
-  login(@Payload() loginDto: LoginDto) {
-    console.log(loginDto);
-    return this.authentificationService.getHello();
+  async login(@Payload() loginDto: LoginDto) {
+    return this.authentificationService.login(loginDto);
   }
 
   @MessagePattern('register')
   async register(@Payload() registerDto: RegisterDto) {
-    try {
-      console.log('choooooooooof', registerDto);
-      const user = await this.authentificationService.register(registerDto);
-      console.log('ffffff');
-      return user;
-    } catch (error) {
-      console.log(error.message);
-      return { message: error.message };
-    }
+    return await this.authentificationService.register(registerDto);
   }
 }

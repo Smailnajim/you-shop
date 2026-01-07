@@ -1,4 +1,4 @@
 export default {
- roles: ['client', 'admin'],
- defaultRole: 'client',
+  roles: ['client', 'admin'],
+  defaultRole: 'client',
 };
