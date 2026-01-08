@@ -1,16 +1,16 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 
 /**
- * CurrentUser Decorator - لاستخراج بيانات المستخدم من الـ Request
+ * CurrentUser Decorator - Extract user data from the Request
  * 
- * الاستخدام:
+ * usage:
  * @UseGuards(JwtAuthGuard)
  * @Get('profile')
  * getProfile(@CurrentUser() user: UserPayload) {
  *   return user;
  * }
  * 
- * // أو للحصول على حقل معين
+ * // or to get a specific field
  * @Get('profile')
  * getProfile(@CurrentUser('email') email: string) {
  *   return email;
@@ -21,16 +21,15 @@ export const CurrentUser = createParamDecorator(
         const request = ctx.switchToHttp().getRequest();
         const user = request.user;
 
-        // إذا تم تحديد حقل معين، نرجعه فقط
+        // if a specific field is provided, return it only
         if (data) {
             return user?.[data];
         }
-
         return user;
     },
 );
 
-// نوع بيانات المستخدم المُستخرجة من التوكن
+// type of user data extracted from the token
 export interface UserPayload {
     userId: string;
     email: string;
