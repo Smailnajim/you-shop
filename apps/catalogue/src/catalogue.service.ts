@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
+import { CatalogueRepository } from './catalogue.repository';
 
 @Injectable()
 export class CatalogueService {
-  constructor() {
-    console.log(process.env['CATALOGUE_DATABASE_URL']);
-  }
-  getHello(): string {
-    return 'Hello World!';
+  constructor(private readonly catalogueRepository: CatalogueRepository) {}
+
+  async findAll() {
+    return this.catalogueRepository.findAll();
   }
 }

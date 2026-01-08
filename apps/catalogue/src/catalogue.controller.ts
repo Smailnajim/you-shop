@@ -1,12 +1,13 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { CatalogueService } from './catalogue.service';
+import { MessagePattern } from '@nestjs/microservices';
 
 @Controller('catalogue')
 export class CatalogueController {
   constructor(private readonly catalogueService: CatalogueService) {}
 
-  @Get()
-  getHello(): string {
-    return this.catalogueService.getHello();
+  @MessagePattern('findAll')
+  findAll() {
+    return this.catalogueService.findAll();
   }
 }
