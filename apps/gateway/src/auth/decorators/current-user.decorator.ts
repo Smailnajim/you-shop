@@ -2,14 +2,12 @@ import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 
 /**
  * CurrentUser Decorator - Extract user data from the Request
- * 
  * usage:
  * @UseGuards(JwtAuthGuard)
  * @Get('profile')
  * getProfile(@CurrentUser() user: UserPayload) {
  *   return user;
  * }
- * 
  * // or to get a specific field
  * @Get('profile')
  * getProfile(@CurrentUser('email') email: string) {
