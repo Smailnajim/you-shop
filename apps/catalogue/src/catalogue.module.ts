@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { CatalogueController } from './catalogue.controller';
 import { CatalogueService } from './catalogue.service';
-import { ConfigModule } from '@nestjs/config';
-import { PrismaModule } from 'apps/authentification/src/prisma/prisma.module';
+import { CatalogueRepository } from './catalogue.repository';
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
   imports: [
@@ -12,6 +13,6 @@ import { PrismaModule } from 'apps/authentification/src/prisma/prisma.module';
     PrismaModule,
   ],
   controllers: [CatalogueController],
-  providers: [CatalogueService],
+  providers: [CatalogueService, CatalogueRepository],
 })
 export class CatalogueModule {}
