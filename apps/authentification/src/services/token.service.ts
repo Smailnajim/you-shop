@@ -20,9 +20,9 @@ export class TokenService {
    * Generate access and refresh tokens for a user
    */
   async generateTokens(user: {
-    id: string;
+    id: number;
     email: string;
-    role?: { name: string };
+    role?: string;
   }): Promise<TokensResponse> {
     const payload: JwtPayload = {
       sub: user.id,

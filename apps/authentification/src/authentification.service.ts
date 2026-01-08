@@ -53,7 +53,7 @@ export class AuthentificationService {
     const tokens = await this.tokenService.generateTokens({
       id: newUser.id,
       email: newUser.email,
-      role: { name: role.name },
+      role: role.name,
     });
 
     return {

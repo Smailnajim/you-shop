@@ -5,7 +5,7 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
   output   = "../generated/prisma"
 }
 
@@ -20,11 +20,11 @@ model Categories {
 }
 
 model Produits {
-  id            Int      @id @default(autoincrement())
-  name          String   @unique
+  id            Int        @id @default(autoincrement())
+  name          String     @unique
   prix          Float
   quantity      Int
-  quantityAlert Int      @default(5)
+  quantityAlert Int        @default(5)
   visible       Boolean
   SKU           String[]
   category      Categories @relation(fields: [categoryId], references: [id])
