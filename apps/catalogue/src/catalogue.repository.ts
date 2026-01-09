@@ -4,7 +4,7 @@ import { Prisma } from './generated/prisma/client';
 
 @Injectable()
 export class CatalogueRepository {
-    constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
     // Create a new product
     async create(data: Prisma.ProduitsCreateInput) {
@@ -29,7 +29,17 @@ export class CatalogueRepository {
         });
     }
 
+    // Find category by name, create if not exists
+    async findOrCreateCategory(name: string) {
+        return await this.prisma.categories.upsert({
+            where: { name },
+            update: {}, // if category exists, do nothing
+            create: { name }, // if category doesn't exist, create it
+        });
+    }
+
     // Find product by name
+
     async findByName(name: string) {
         return this.prisma.produits.findUnique({
             where: { name },

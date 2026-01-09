@@ -5,5 +5,5 @@ export class CreateProduitDto {
   quantityAlert?: number;
   visible?: boolean;
   SKU?: string[];
-  categoryId: number;
+  category: string;
 }

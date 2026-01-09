@@ -6,7 +6,7 @@ import { UpdateProduitDto } from './dto/update-produit.dto';
 
 @Injectable()
 export class CatalogueService {
-  constructor(private readonly catalogueRepository: CatalogueRepository) { }
+  constructor(private readonly catalogueRepository: CatalogueRepository) {}
 
   // Create a new product
   async create(createProduitDto: CreateProduitDto) {
@@ -20,6 +20,9 @@ export class CatalogueService {
         statusCode: HttpStatus.CONFLICT,
       });
     }
+    const category = await this.catalogueRepository.findOrCreateCategory(
+      createProduitDto.category,
+    );
 
     return this.catalogueRepository.create({
       name: createProduitDto.name,
@@ -29,7 +32,7 @@ export class CatalogueService {
       visible: createProduitDto.visible ?? true,
       SKU: createProduitDto.SKU ?? [],
       category: {
-        connect: { id: createProduitDto.categoryId },
+        connect: { id: category.id },
       },
     });
   }

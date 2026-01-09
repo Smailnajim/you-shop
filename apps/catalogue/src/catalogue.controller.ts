@@ -6,7 +6,7 @@ import { UpdateProduitDto } from './dto/update-produit.dto';
 
 @Controller('catalogue')
 export class CatalogueController {
-  constructor(private readonly catalogueService: CatalogueService) { }
+  constructor(private readonly catalogueService: CatalogueService) {}
 
   // Create a new product
   @MessagePattern('create_produit')
