@@ -12,7 +12,7 @@ export class AuthentificationService {
   constructor(
     private readonly authRepository: AuthRepository,
     private readonly tokenService: TokenService,
-  ) {}
+  ) { }
 
   getHello(): string {
     return 'Hello World!';
@@ -91,7 +91,7 @@ export class AuthentificationService {
     const tokens = await this.tokenService.generateTokens({
       id: user.id,
       email: user.email,
-      role: user.role,
+      role: user.role.name,
     });
 
     console.log(user.role.name);

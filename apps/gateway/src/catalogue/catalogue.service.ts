@@ -3,12 +3,13 @@ import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 import { CreateProduitDto } from './dto/create-produit.dto';
 import { UpdateProduitDto } from './dto/update-produit.dto';
+import { FilterProduitsDto } from './dto/filter-produits.dto';
 
 @Injectable()
 export class CatalogueService {
   constructor(
     @Inject('CATALOGUE_CLIENT') private catalogueClient: ClientProxy,
-  ) {}
+  ) { }
 
   // Create a new product
   async create(createProduitDto: CreateProduitDto) {
@@ -20,6 +21,13 @@ export class CatalogueService {
   // Get all products
   async findAll() {
     return firstValueFrom(this.catalogueClient.send('get_all_produits', {}));
+  }
+
+  // Get all products with pagination and filters
+  async findAllPaginated(filterDto: FilterProduitsDto) {
+    return firstValueFrom(
+      this.catalogueClient.send('get_produits_paginated', filterDto),
+    );
   }
 
   // Get single product by ID
@@ -50,6 +58,13 @@ export class CatalogueService {
   async findLowStock() {
     return firstValueFrom(
       this.catalogueClient.send('get_low_stock_produits', {}),
+    );
+  }
+
+  // Get all categories
+  async findAllCategories() {
+    return firstValueFrom(
+      this.catalogueClient.send('get_all_categories', {}),
     );
   }
 }

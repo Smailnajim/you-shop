@@ -3,10 +3,11 @@ import { MessagePattern, Payload } from '@nestjs/microservices';
 import { CatalogueService } from './catalogue.service';
 import { CreateProduitDto } from './dto/create-produit.dto';
 import { UpdateProduitDto } from './dto/update-produit.dto';
+import { FilterProduitsDto } from './dto/filter-produits.dto';
 
 @Controller('catalogue')
 export class CatalogueController {
-  constructor(private readonly catalogueService: CatalogueService) {}
+  constructor(private readonly catalogueService: CatalogueService) { }
 
   // Create a new product
   @MessagePattern('create_produit')
@@ -18,6 +19,12 @@ export class CatalogueController {
   @MessagePattern('get_all_produits')
   findAll() {
     return this.catalogueService.findAll();
+  }
+
+  // Get all products with pagination and filters
+  @MessagePattern('get_produits_paginated')
+  findAllPaginated(@Payload() filterDto: FilterProduitsDto) {
+    return this.catalogueService.findAllPaginated(filterDto);
   }
 
   // Get single product by ID
@@ -48,6 +55,12 @@ export class CatalogueController {
   @MessagePattern('get_low_stock_produits')
   findLowStock() {
     return this.catalogueService.findLowStock();
+  }
+
+  // Get all categories
+  @MessagePattern('get_all_categories')
+  findAllCategories() {
+    return this.catalogueService.findAllCategories();
   }
 }
 

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
 export interface JwtPayload {
-  sub: string; // user id
+  sub: number; // user id
   email: string;
   role: string;
 }
@@ -14,7 +14,7 @@ export interface TokensResponse {
 
 @Injectable()
 export class TokenService {
-  constructor(private readonly jwtService: JwtService) {}
+  constructor(private readonly jwtService: JwtService) { }
 
   /**
    * Generate access and refresh tokens for a user
@@ -27,7 +27,7 @@ export class TokenService {
     const payload: JwtPayload = {
       sub: user.id,
       email: user.email,
-      role: user.role?.name || 'client',
+      role: user.role || 'client',
     };
 
     const [accessToken, refreshToken] = await Promise.all([

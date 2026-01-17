@@ -2,9 +2,18 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from './prisma/prisma.service';
 import { Prisma } from './generated/prisma/client';
 
+export interface PaginationParams {
+    page?: number;
+    limit?: number;
+    categoryId?: number;
+    minPrix?: number;
+    maxPrix?: number;
+    search?: string;
+}
+
 @Injectable()
 export class CatalogueRepository {
-  constructor(private readonly prisma: PrismaService) {}
+    constructor(private readonly prisma: PrismaService) { }
 
     // Create a new product
     async create(data: Prisma.ProduitsCreateInput) {
@@ -19,6 +28,59 @@ export class CatalogueRepository {
         return this.prisma.produits.findMany({
             include: { category: true },
         });
+    }
+
+    // Find all products with pagination and filters
+    async findAllPaginated(params: PaginationParams) {
+        const { page = 1, limit = 10, categoryId, minPrix, maxPrix, search } = params;
+        const skip = (page - 1) * limit;
+
+        // Build where clause for filters
+        const where: Prisma.ProduitsWhereInput = {
+            visible: true, // Only show visible products to visitors
+        };
+
+        if (categoryId) {
+            where.categoryId = categoryId;
+        }
+
+        if (minPrix !== undefined || maxPrix !== undefined) {
+            where.prix = {};
+            if (minPrix !== undefined) {
+                where.prix.gte = minPrix;
+            }
+            if (maxPrix !== undefined) {
+                where.prix.lte = maxPrix;
+            }
+        }
+
+        if (search) {
+            where.name = {
+                contains: search,
+                mode: 'insensitive',
+            };
+        }
+
+        const [data, total] = await Promise.all([
+            this.prisma.produits.findMany({
+                where,
+                skip,
+                take: limit,
+                include: { category: true },
+                orderBy: { id: 'desc' },
+            }),
+            this.prisma.produits.count({ where }),
+        ]);
+
+        return {
+            data,
+            meta: {
+                total,
+                page,
+                limit,
+                totalPages: Math.ceil(total / limit),
+            },
+        };
     }
 
     // Find product by ID
@@ -75,5 +137,17 @@ export class CatalogueRepository {
         return this.prisma.$queryRaw`
       SELECT * FROM "Produits" WHERE quantity <= "quantityAlert"
     `;
+    }
+
+    // Find all categories
+    async findAllCategories() {
+        return this.prisma.categories.findMany({
+            include: {
+                _count: {
+                    select: { produits: true },
+                },
+            },
+            orderBy: { name: 'asc' },
+        });
     }
 }

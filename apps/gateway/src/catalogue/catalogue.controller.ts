@@ -6,11 +6,12 @@ import {
   Delete,
   Body,
   Param,
+  Query,
   ParseIntPipe,
   UseGuards,
 } from '@nestjs/common';
 import { CatalogueService } from './catalogue.service';
-import { CreateProduitDto, UpdateProduitDto } from './dto';
+import { CreateProduitDto, UpdateProduitDto, FilterProduitsDto } from './dto';
 import { JwtAuthGuard } from '../auth/guards';
 
 @Controller('catalogue')
@@ -24,13 +25,13 @@ export class CatalogueController {
     return this.catalogueService.create(createProduitDto);
   }
 
-  // Get all products (Public)
+  // Get all products with pagination and filters (Public - for visitors)
   @Get('produits')
-  findAll() {
-    return this.catalogueService.findAll();
+  findAll(@Query() filterDto: FilterProduitsDto) {
+    return this.catalogueService.findAllPaginated(filterDto);
   }
 
-  // Get single product by ID (Public)
+  // Get single product by ID (Public - for visitors)
   @Get('produits/:id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.catalogueService.findOne(id);
@@ -53,7 +54,13 @@ export class CatalogueController {
     return this.catalogueService.remove(id);
   }
 
-  // Get products by category (Public)
+  // Get all categories (Public - for visitors to filter)
+  @Get('categories')
+  findAllCategories() {
+    return this.catalogueService.findAllCategories();
+  }
+
+  // Get products by category (Public - for visitors)
   @Get('categories/:categoryId/produits')
   findByCategory(@Param('categoryId', ParseIntPipe) categoryId: number) {
     return this.catalogueService.findByCategory(categoryId);

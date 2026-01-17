@@ -1,12 +1,12 @@
 import { Injectable, HttpStatus } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
-import { CatalogueRepository } from './catalogue.repository';
+import { CatalogueRepository, PaginationParams } from './catalogue.repository';
 import { CreateProduitDto } from './dto/create-produit.dto';
 import { UpdateProduitDto } from './dto/update-produit.dto';
 
 @Injectable()
 export class CatalogueService {
-  constructor(private readonly catalogueRepository: CatalogueRepository) {}
+  constructor(private readonly catalogueRepository: CatalogueRepository) { }
 
   // Create a new product
   async create(createProduitDto: CreateProduitDto) {
@@ -40,6 +40,11 @@ export class CatalogueService {
   // Find all products
   async findAll() {
     return this.catalogueRepository.findAll();
+  }
+
+  // Find all products with pagination and filters
+  async findAllPaginated(params: PaginationParams) {
+    return this.catalogueRepository.findAllPaginated(params);
   }
 
   // Find product by ID
@@ -100,6 +105,11 @@ export class CatalogueService {
   // Find products with low stock
   async findLowStock() {
     return this.catalogueRepository.findLowStock();
+  }
+
+  // Find all categories
+  async findAllCategories() {
+    return this.catalogueRepository.findAllCategories();
   }
 }
 
