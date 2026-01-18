@@ -12,14 +12,16 @@ import {
 } from '@nestjs/common';
 import { CatalogueService } from './catalogue.service';
 import { CreateProduitDto, UpdateProduitDto, FilterProduitsDto } from './dto';
-import { JwtAuthGuard } from '../auth/guards';
+import { JwtAuthGuard, RolesGuard } from '../auth/guards';
+import { Roles } from '../auth/decorators';
 
 @Controller('catalogue')
 export class CatalogueController {
   constructor(private readonly catalogueService: CatalogueService) { }
 
-  // Create a new product (Protected)
-  @UseGuards(JwtAuthGuard)
+  // Create a new product (Admin only)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @Post('produits')
   create(@Body() createProduitDto: CreateProduitDto) {
     return this.catalogueService.create(createProduitDto);
@@ -37,8 +39,9 @@ export class CatalogueController {
     return this.catalogueService.findOne(id);
   }
 
-  // Update product (Protected)
-  @UseGuards(JwtAuthGuard)
+  // Update product (Admin only)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @Put('produits/:id')
   update(
     @Param('id', ParseIntPipe) id: number,
@@ -47,8 +50,9 @@ export class CatalogueController {
     return this.catalogueService.update(id, updateProduitDto);
   }
 
-  // Delete product (Protected)
-  @UseGuards(JwtAuthGuard)
+  // Delete product (Admin only)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @Delete('produits/:id')
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.catalogueService.remove(id);
@@ -66,8 +70,9 @@ export class CatalogueController {
     return this.catalogueService.findByCategory(categoryId);
   }
 
-  // Get products with low stock (Protected)
-  @UseGuards(JwtAuthGuard)
+  // Get products with low stock (Admin only)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @Get('produits/low-stock')
   findLowStock() {
     return this.catalogueService.findLowStock();

@@ -1,0 +1,422 @@
+{
+    "info": {
+        "_postman_id": "you-shop-api-collection",
+        "name": "You-Shop API",
+        "description": "Complete API collection for You-Shop e-commerce platform",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "variable": [
+        {
+            "key": "baseUrl",
+            "value": "http://localhost:3000",
+            "type": "string"
+        },
+        {
+            "key": "accessToken",
+            "value": "",
+            "type": "string"
+        }
+    ],
+    "item": [
+        {
+            "name": "Authentication",
+            "description": "User authentication endpoints",
+            "item": [
+                {
+                    "name": "Register",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\",\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/users/register",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "users",
+                                "register"
+                            ]
+                        },
+                        "description": "Register a new user account"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Login",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "var jsonData = pm.response.json();",
+                                    "if (jsonData.accessToken) {",
+                                    "    pm.collectionVariables.set('accessToken', jsonData.accessToken);",
+                                    "}"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/users/login",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "users",
+                                "login"
+                            ]
+                        },
+                        "description": "Login and get access token (automatically saved to collection variable)"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Profile (Protected)",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/users/profile",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "users",
+                                "profile"
+                            ]
+                        },
+                        "description": "Get current user profile (requires authentication)"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Me (Protected)",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/users/me",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "users",
+                                "me"
+                            ]
+                        },
+                        "description": "Get current user email and role (requires authentication)"
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Catalogue - Products",
+            "description": "Product management endpoints",
+            "item": [
+                {
+                    "name": "Get All Products (Public)",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/catalogue/produits",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "catalogue",
+                                "produits"
+                            ]
+                        },
+                        "description": "Get all products with default pagination"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get All Products with Pagination",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/catalogue/produits?page=1&limit=10",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "catalogue",
+                                "produits"
+                            ],
+                            "query": [
+                                {
+                                    "key": "page",
+                                    "value": "1"
+                                },
+                                {
+                                    "key": "limit",
+                                    "value": "10"
+                                }
+                            ]
+                        },
+                        "description": "Get products with pagination parameters"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Products with Filters",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/catalogue/produits?page=1&limit=10&minPrice=10&maxPrice=100&category=electronics",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "catalogue",
+                                "produits"
+                            ],
+                            "query": [
+                                {
+                                    "key": "page",
+                                    "value": "1"
+                                },
+                                {
+                                    "key": "limit",
+                                    "value": "10"
+                                },
+                                {
+                                    "key": "minPrice",
+                                    "value": "10"
+                                },
+                                {
+                                    "key": "maxPrice",
+                                    "value": "100"
+                                },
+                                {
+                                    "key": "category",
+                                    "value": "electronics"
+                                }
+                            ]
+                        },
+                        "description": "Get products with price and category filters"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Single Product (Public)",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/catalogue/produits/1",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "catalogue",
+                                "produits",
+                                "1"
+                            ]
+                        },
+                        "description": "Get a single product by ID"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Create Product (Protected)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Sample Product\",\n  \"prix\": 29.99,\n  \"quantity\": 100,\n  \"quantityAlert\": 10,\n  \"visible\": true,\n  \"SKU\": [\"SKU001\", \"SKU002\"],\n  \"category\": \"electronics\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/catalogue/produits",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "catalogue",
+                                "produits"
+                            ]
+                        },
+                        "description": "Create a new product (requires authentication)"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Product (Protected)",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Updated Product Name\",\n  \"prix\": 39.99,\n  \"quantity\": 150,\n  \"visible\": true\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/catalogue/produits/1",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "catalogue",
+                                "produits",
+                                "1"
+                            ]
+                        },
+                        "description": "Update an existing product by ID (requires authentication)"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete Product (Protected)",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/catalogue/produits/1",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "catalogue",
+                                "produits",
+                                "1"
+                            ]
+                        },
+                        "description": "Delete a product by ID (requires authentication)"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Low Stock Products (Protected)",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/catalogue/produits/low-stock",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "catalogue",
+                                "produits",
+                                "low-stock"
+                            ]
+                        },
+                        "description": "Get products with low stock (requires authentication)"
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Catalogue - Categories",
+            "description": "Category management endpoints",
+            "item": [
+                {
+                    "name": "Get All Categories (Public)",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/catalogue/categories",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "catalogue",
+                                "categories"
+                            ]
+                        },
+                        "description": "Get all available categories"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Products by Category (Public)",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/catalogue/categories/1/produits",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "catalogue",
+                                "categories",
+                                "1",
+                                "produits"
+                            ]
+                        },
+                        "description": "Get all products in a specific category"
+                    },
+                    "response": []
+                }
+            ]
+        }
+    ]
+}
